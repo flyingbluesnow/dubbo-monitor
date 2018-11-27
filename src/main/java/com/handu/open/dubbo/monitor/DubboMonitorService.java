@@ -27,6 +27,8 @@ import com.handu.open.dubbo.monitor.domain.DubboInvoke;
 import com.handu.open.dubbo.monitor.support.Dao;
 import com.handu.open.dubbo.monitor.support.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -42,8 +44,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author Jinkai.Ma
  */
-@Service(delay = -1)
-public class DubboMonitorService implements MonitorService {
+@Service(validation = "dubboMonitorService", delay = 3000)
+public class DubboMonitorService implements MonitorService, ApplicationListener {
 
     private static final Logger logger = LoggerFactory.getLogger(DubboMonitorService.class);
 
@@ -207,5 +209,9 @@ public class DubboMonitorService implements MonitorService {
         result.put("success", dao.getList(CLASSNAME, "countDubboInvokeSuccessTopTen", dubboInvoke));
         result.put("failure", dao.getList(CLASSNAME, "countDubboInvokeFailureTopTen", dubboInvoke));
         return result;
+    }
+
+    public void onApplicationEvent(ApplicationEvent event) {
+
     }
 }
