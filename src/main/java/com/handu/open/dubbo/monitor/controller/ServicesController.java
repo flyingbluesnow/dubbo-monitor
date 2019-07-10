@@ -15,10 +15,12 @@
  */
 package com.handu.open.dubbo.monitor.controller;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.handu.open.dubbo.monitor.RegistryContainer;
-import com.handu.open.dubbo.monitor.domain.DubboService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,9 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.handu.open.dubbo.monitor.RegistryContainer;
+import com.handu.open.dubbo.monitor.domain.DubboService;
 
 /**
  * ServicesController
@@ -63,7 +64,7 @@ public class ServicesController {
 
                 if (providerSize > 0) {
                     URL provider = providers.iterator().next();
-                    dubboService.setApplication(provider.getParameter(Constants.APPLICATION_KEY, ""));
+                    dubboService.setApplication(provider.getParameter(CommonConstants.APPLICATION_KEY, ""));
                     dubboService.setOwner(provider.getParameter("owner", ""));
                     dubboService.setOrganization((provider.hasParameter("organization") ? provider.getParameter("organization") : ""));
                 }

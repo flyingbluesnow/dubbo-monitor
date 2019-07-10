@@ -15,19 +15,29 @@
  */
 package com.handu.open.dubbo.monitor;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.ConcurrentHashSet;
-import com.alibaba.dubbo.common.utils.NetUtils;
-import com.alibaba.dubbo.config.annotation.Reference;
-import com.alibaba.dubbo.registry.NotifyListener;
-import com.alibaba.dubbo.registry.RegistryService;
-import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.constants.RegistryConstants;
+import org.apache.dubbo.common.utils.ConcurrentHashSet;
+import org.apache.dubbo.common.utils.NetUtils;
+import org.apache.dubbo.config.annotation.Reference;
+import org.apache.dubbo.registry.Constants;
+import org.apache.dubbo.registry.NotifyListener;
+import org.apache.dubbo.registry.RegistryService;
+import org.springframework.stereotype.Service;
+
 
 /**
  * RegistryContainer
@@ -55,7 +65,7 @@ public class RegistryContainer {
 
     private final Map<String, List<URL>> serviceConsumers = new ConcurrentHashMap<String, List<URL>>();
 
-    @Reference
+    @Reference(check = false)
     private RegistryService registry;
 
     public RegistryService getRegistry() {
@@ -126,7 +136,7 @@ public class RegistryContainer {
         if (application != null && application.length() > 0) {
             for (List<URL> providers : serviceProviders.values()) {
                 for (URL url : providers) {
-                    if (application.equals(url.getParameter(Constants.APPLICATION_KEY))) {
+                    if (application.equals(url.getParameter(CommonConstants.APPLICATION_KEY))) {
                         urls.add(url);
                     }
                 }
@@ -178,7 +188,7 @@ public class RegistryContainer {
         if (application != null && application.length() > 0) {
             for (List<URL> consumers : serviceConsumers.values()) {
                 for (URL url : consumers) {
-                    if (application.equals(url.getParameter(Constants.APPLICATION_KEY))) {
+                    if (application.equals(url.getParameter(CommonConstants.APPLICATION_KEY))) {
                         urls.add(url);
                     }
                 }
@@ -190,13 +200,13 @@ public class RegistryContainer {
     @PostConstruct
     public void start() {
         URL subscribeUrl = new URL(Constants.ADMIN_PROTOCOL, NetUtils.getLocalHost(), 0, "",
-                Constants.INTERFACE_KEY, Constants.ANY_VALUE,
-                Constants.GROUP_KEY, Constants.ANY_VALUE,
-                Constants.VERSION_KEY, Constants.ANY_VALUE,
-                Constants.CLASSIFIER_KEY, Constants.ANY_VALUE,
-                Constants.CATEGORY_KEY, Constants.PROVIDERS_CATEGORY + ","
-                + Constants.CONSUMERS_CATEGORY,
-                Constants.CHECK_KEY, String.valueOf(false));
+                CommonConstants.INTERFACE_KEY, CommonConstants.ANY_VALUE,
+                CommonConstants.GROUP_KEY, CommonConstants.ANY_VALUE,
+                CommonConstants.VERSION_KEY, CommonConstants.ANY_VALUE,
+                CommonConstants.CLASSIFIER_KEY, CommonConstants.ANY_VALUE,
+                RegistryConstants.CATEGORY_KEY, RegistryConstants.PROVIDERS_CATEGORY + ","
+                + RegistryConstants.CONSUMERS_CATEGORY,
+                org.apache.dubbo.remoting.Constants.CHECK_KEY, String.valueOf(false));
         registry.subscribe(subscribeUrl, new NotifyListener() {
             public void notify(List<URL> urls) {
                 if (urls == null || urls.size() == 0) {
@@ -205,15 +215,15 @@ public class RegistryContainer {
                 Map<String, List<URL>> proivderMap = new HashMap<String, List<URL>>();
                 Map<String, List<URL>> consumerMap = new HashMap<String, List<URL>>();
                 for (URL url : urls) {
-                    String application = url.getParameter(Constants.APPLICATION_KEY);
+                    String application = url.getParameter(CommonConstants.APPLICATION_KEY);
                     if (application != null && application.length() > 0) {
                         applications.add(application);
                     }
                     String service = url.getServiceInterface();
                     services.add(service);
-                    String category = url.getParameter(Constants.CATEGORY_KEY, Constants.DEFAULT_CATEGORY);
-                    if (Constants.PROVIDERS_CATEGORY.equals(category)) {
-                        if (Constants.EMPTY_PROTOCOL.equals(url.getProtocol())) {
+                    String category = url.getParameter(RegistryConstants.CATEGORY_KEY, RegistryConstants.DEFAULT_CATEGORY);
+                    if (RegistryConstants.PROVIDERS_CATEGORY.equals(category)) {
+                        if (RegistryConstants.EMPTY_PROTOCOL.equals(url.getProtocol())) {
                             serviceProviders.remove(service);
                         } else {
                             List<URL> list = proivderMap.get(service);
@@ -238,8 +248,8 @@ public class RegistryContainer {
                                 applicationServices.add(service);
                             }
                         }
-                    } else if (Constants.CONSUMERS_CATEGORY.equals(category)) {
-                        if (Constants.EMPTY_PROTOCOL.equals(url.getProtocol())) {
+                    } else if (RegistryConstants.CONSUMERS_CATEGORY.equals(category)) {
+                        if (RegistryConstants.EMPTY_PROTOCOL.equals(url.getProtocol())) {
                             serviceConsumers.remove(service);
                         } else {
                             List<URL> list = consumerMap.get(service);

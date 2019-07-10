@@ -15,11 +15,13 @@
  */
 package com.handu.open.dubbo.monitor.controller;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.utils.NetUtils;
-import com.handu.open.dubbo.monitor.RegistryContainer;
-import com.handu.open.dubbo.monitor.domain.DubboHost;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.utils.NetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.handu.open.dubbo.monitor.RegistryContainer;
+import com.handu.open.dubbo.monitor.domain.DubboHost;
 
 /**
  * HostsController
@@ -61,7 +62,7 @@ public class HostsController {
 
                 if ((providers != null && providers.size() > 0) || (consumers != null && consumers.size() > 0)) {
                     URL url = (providers != null && providers.size() > 0) ? providers.iterator().next() : consumers.iterator().next();
-                    dubboHost.setApplication(url.getParameter(Constants.APPLICATION_KEY, ""));
+                    dubboHost.setApplication(url.getParameter(CommonConstants.APPLICATION_KEY, ""));
                     dubboHost.setOwner(url.getParameter("owner", ""));
                     dubboHost.setOrganization((url.hasParameter("organization") ? url.getParameter("organization") : ""));
                 }

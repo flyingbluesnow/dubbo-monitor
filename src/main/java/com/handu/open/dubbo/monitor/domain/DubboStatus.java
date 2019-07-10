@@ -15,7 +15,6 @@
  */
 package com.handu.open.dubbo.monitor.domain;
 
-import com.alibaba.dubbo.common.status.Status;
 
 import java.io.Serializable;
 
@@ -23,7 +22,8 @@ import java.io.Serializable;
  * @author Jinkai.Ma
  */
 public class DubboStatus implements Serializable {
-
+    private static final long serialVersionUID = 8505368008532399702L;
+    
     private String name;
     private Status status;
     private String description;

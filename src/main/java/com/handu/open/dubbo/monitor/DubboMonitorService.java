@@ -15,23 +15,6 @@
  */
 package com.handu.open.dubbo.monitor;
 
-import com.alibaba.dubbo.common.Constants;
-import com.alibaba.dubbo.common.URL;
-import com.alibaba.dubbo.common.logger.Logger;
-import com.alibaba.dubbo.common.logger.LoggerFactory;
-import com.alibaba.dubbo.common.utils.ConfigUtils;
-import com.alibaba.dubbo.config.annotation.Service;
-import com.alibaba.dubbo.monitor.MonitorService;
-import com.google.common.collect.Maps;
-import com.handu.open.dubbo.monitor.domain.DubboInvoke;
-import com.handu.open.dubbo.monitor.support.Dao;
-import com.handu.open.dubbo.monitor.support.UuidUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.util.StringUtils;
-
-import javax.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -39,12 +22,31 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.common.logger.Logger;
+import org.apache.dubbo.common.logger.LoggerFactory;
+import org.apache.dubbo.common.utils.ConfigUtils;
+import org.apache.dubbo.config.annotation.Service;
+import org.apache.dubbo.monitor.MonitorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.util.StringUtils;
+
+import com.google.common.collect.Maps;
+import com.handu.open.dubbo.monitor.domain.DubboInvoke;
+import com.handu.open.dubbo.monitor.support.Dao;
+import com.handu.open.dubbo.monitor.support.UuidUtil;
+
 /**
  * MonitorService
  *
  * @author Jinkai.Ma
  */
-@Service(validation = "dubboMonitorService", delay = 3000)
+@Service
 public class DubboMonitorService implements MonitorService, ApplicationListener {
 
     private static final Logger logger = LoggerFactory.getLogger(DubboMonitorService.class);
@@ -102,7 +104,7 @@ public class DubboMonitorService implements MonitorService, ApplicationListener 
         if (POISON_PROTOCOL.equals(statistics.getProtocol())) {
             return;
         }
-        String timestamp = statistics.getParameter(Constants.TIMESTAMP_KEY);
+        String timestamp = statistics.getParameter(CommonConstants.TIMESTAMP_KEY);
         Date now;
         if (timestamp == null || timestamp.length() == 0) {
             now = new Date();
@@ -214,4 +216,5 @@ public class DubboMonitorService implements MonitorService, ApplicationListener 
     public void onApplicationEvent(ApplicationEvent event) {
 
     }
+    
 }

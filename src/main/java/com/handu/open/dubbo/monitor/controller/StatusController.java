@@ -15,18 +15,19 @@
  */
 package com.handu.open.dubbo.monitor.controller;
 
-import com.alibaba.dubbo.common.extension.ExtensionLoader;
-import com.alibaba.dubbo.common.status.Status;
-import com.alibaba.dubbo.common.status.StatusChecker;
-import com.handu.open.dubbo.monitor.domain.DubboStatus;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.dubbo.common.extension.ExtensionLoader;
+import org.apache.dubbo.common.status.Status;
+import org.apache.dubbo.common.status.StatusChecker;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.handu.open.dubbo.monitor.domain.DubboStatus;
 
 /**
  * StatusController
@@ -48,7 +49,7 @@ public class StatusController {
             if (status != null && !Status.Level.UNKNOWN.equals(status.getLevel())) {
                 dubboStatus = new DubboStatus();
                 dubboStatus.setName(name);
-                dubboStatus.setStatus(status);
+                dubboStatus.setStatus(new com.handu.open.dubbo.monitor.domain.Status(status));
                 dubboStatus.setDescription(status.getMessage());
                 rows.add(dubboStatus);
             }
