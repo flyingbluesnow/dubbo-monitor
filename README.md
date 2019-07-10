@@ -6,16 +6,10 @@
 
 Dubbo Monitor是针对Dubbo开发的监控系统，基于dubbo-monitor-simple改进而成，可以理解为其演化版本。该系统用关系型数据库（MySQL）记录日志的方式替代了dubbo-monitor-simple写文件的方式。注：亦可改为其他Relational Database（关系型数据库）。
 
-> PS: 项目目前依赖的是dubbox的2.8.4版本，但是dubbox并没有修改过监控相关的代码，因此理论上也可以支持dubbo的最新版本。
+原始来源：https://github.com/handuyishe/dubbo-monitor  后参照了https://github.com/smartvolshell/dubbo-monitor的改进
 
-## 升级日志
->### 2015-08-25
->
-> 1. 发布Dubbo Monitor for Mongo版本1.0.0，版本分支为mongo。
+> PS: 原先项目依赖的是dubbox的2.8.4版本，这里修改为dubbo 2.7.2。
 
->### 2015-07-06
->
-> 1. 发布Dubbo Monitor for Relational Database版本1.0.0，版本分支为master。
 
 ## Dubbo Monitor使用帮助
 
@@ -51,6 +45,3 @@ target文件夹下生成的dubbo-monitor.war即为项目部署文件，将其放
 `第四步`：访问项目
 启动web服务器后，访问地址：http://IP:[port]/dubbo-moniotor，采用配置文件中manager.username和manager.password设置值进行登录。
 
-## 服务提供端配置
-
-[Dubbo服务提供端监控配置](http://dubbo.io/User+Guide-zh.htm#UserGuide-zh-%3Cdubbo%3Amonitor%2F%3E)
